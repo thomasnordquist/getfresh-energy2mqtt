@@ -29,9 +29,13 @@ class Api {
 		const meterId = userInfo.smartMeters[0].operatorId
 		
 		while (true) {
-			const consumption = await this.getConsumption(meterId)
-			if (consumption[0]) {
-				readingCallback(consumption[0])
+			try {
+				const consumption = await this.getConsumption(meterId)
+				if (consumption[0]) {
+					readingCallback(consumption[0])
+				}
+			} catch(error) {
+				console.error('failed updating consumption', error)
 			}
 
 			await new Promise(resolve => setTimeout(resolve, 1000))
@@ -42,9 +46,13 @@ class Api {
 	private async ensureSessionIsNotExpired() {
 		if (this.expiration < Date.now()) {
 			console.log("Refresh session")
-			const loginInfo = await this.login()
-			this.loginInfo = loginInfo
-			this.expiration = Date.now() + loginInfo.expires_in
+			try {
+				const loginInfo = await this.login()
+				this.loginInfo = loginInfo
+				this.expiration = Date.now() + loginInfo.expires_in
+			} catch {
+				throw new Error('Could not refresh session')
+			}
 		}
 	}
 
