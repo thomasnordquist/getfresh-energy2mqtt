@@ -4,6 +4,8 @@ const moment = require('moment')
 import {LoginResponse, UserInfo, PowerReading} from './Models'
 import {connect} from 'mqtt'
 
+require('dotenv').config()
+
 class Api {
 	private expiration: number = 0
 	private loginInfo?: LoginResponse
@@ -104,7 +106,7 @@ class Api {
 }
 
 const client = connect('mqtt://nodered:1883')
-const apiClient = new Api(process.env.USERNAME || '', process.env.USERNAME || '')
+const apiClient = new Api(process.env.GETFRESH_USERNAME || '', process.env.GETFRESH_PASSWORD || '')
 apiClient.getLiveConsumption((consumption: PowerReading) => {
 	client.publish('energy_meter', JSON.stringify(consumption))
 })
