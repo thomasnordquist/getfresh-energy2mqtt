@@ -31,6 +31,7 @@ class Api {
 		while (true) {
 			try {
 				const consumption = await this.getConsumption(meterId)
+				consumption.sort((a, b) => new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime())
 				if (consumption[0]) {
 					readingCallback(consumption[0])
 				}
@@ -38,7 +39,7 @@ class Api {
 				console.error('failed updating consumption', error)
 			}
 
-			await new Promise(resolve => setTimeout(resolve, 1000))
+			await new Promise(resolve => setTimeout(resolve, 2000))
 		}
 
 	}
@@ -102,7 +103,7 @@ class Api {
 	}
 
 	async getConsumption(meterId: string): Promise<Array<PowerReading>> {
-		let now = moment.utc().subtract('1', 'minutes').format().replace('Z', '.000Z')
+		let now = moment.utc().subtract('5', 'seconds').format().replace('Z', '.000Z')
 		let response = await axios({
 			headers: this.baseHeaders(),
 			method: 'get',
