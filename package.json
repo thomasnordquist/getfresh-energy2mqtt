@@ -19,6 +19,8 @@
     "typescript": "^3.5.3"
   },
   "devDependencies": {
-    "@types/node": "^12.6.8"
+    "@types/node": "^12.6.8",
+    "@types/qs": "^6.5.3",
+    "prettier": "^1.18.2"
   }
 }

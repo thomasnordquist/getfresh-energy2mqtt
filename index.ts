@@ -1,10 +1,9 @@
 import axios, { AxiosInstance } from 'axios'
-const qs = require('qs');
-const moment = require('moment')
-import {LoginResponse, UserInfo, PowerReading, SmartMeter} from './Models'
-import {connect} from 'mqtt'
-import { EventEmitter } from 'events';
-
+import { LoginResponse, UserInfo, PowerReading, SmartMeter } from './Models'
+import { connect } from 'mqtt'
+import { EventEmitter } from 'events'
+import * as qs from 'qs'
+import * as moment from 'moment'
 require('dotenv').config()
 
 type ReadingCallback = (meter: SmartMeter, reading: PowerReading) => void
