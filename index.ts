@@ -92,7 +92,8 @@ class GetFreshEnergyApiClient {
 			try {
 				this.sessionRenewalPromise = this.login()
 				await this.sessionRenewalPromise
-			} catch {
+			} catch(error) {
+				console.error(error)
 				throw new Error('Could not refresh session')
 			}
 		}
@@ -114,7 +115,7 @@ class GetFreshEnergyApiClient {
 			}
 		}
 
-		const apiClient = await this.getValidApiSession()
+		const apiClient = await this.getValidApiSession({forLogin: true})
 		const response = await apiClient.post('auth/oauth/token', credentials, optionsFormUrlEncoded)
 
 		this.loginResponse = response.data
@@ -122,12 +123,13 @@ class GetFreshEnergyApiClient {
 	}
 
 	async getUserInfo(): Promise<UserInfo | undefined> {
+		await this.ensureSessionIsNotExpired()
+
 		if (!this.loginResponse) {
 			return
 		}
 
 		const userId = this.loginResponse.userId
-		await this.ensureSessionIsNotExpired()
 		try {
 			const apiClient = await this.getValidApiSession()
 
@@ -154,6 +156,7 @@ async function monitorConsumption() {
 	const userInfo = await freshEnergy.getUserInfo()
 	if (!userInfo) {
 		throw Error("Could not load user info")
+		process.exit()
 	}
   const firstMeter = userInfo.smartMeters[0]
 
