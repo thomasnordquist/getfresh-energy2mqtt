@@ -156,7 +156,6 @@ async function monitorConsumption() {
 	const userInfo = await freshEnergy.getUserInfo()
 	if (!userInfo) {
 		throw Error("Could not load user info")
-		process.exit()
 	}
   const firstMeter = userInfo.smartMeters[0]
 
@@ -166,4 +165,9 @@ async function monitorConsumption() {
 	})
 }
 
-monitorConsumption()
+try {
+	monitorConsumption()
+} catch(error) {
+	console.error(error)
+	process.exit(1)
+}
