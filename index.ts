@@ -160,8 +160,9 @@ async function monitorConsumption() {
 	}
   const firstMeter = userInfo.smartMeters[0]
 
-	const monitor = freshEnergy.createMonitor(firstMeter, (consumption) => {
-		client.publish('energy_meter', JSON.stringify(consumption))
+	const monitor = freshEnergy.createMonitor(firstMeter, (meter, consumption) => {
+		client.publish(`energy_meter/${meter.meterId}`, JSON.stringify(meter))
+		client.publish(`energy_meter/${meter.meterId}/reading`, JSON.stringify(consumption))
 	})
 }
 
